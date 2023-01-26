@@ -10,12 +10,13 @@ public class CommandLine {
         // Utility classes should not have public constructors
     }
 
-    // private static final String PASSWORD = "password";
+    private static final String PASSWORD = "password";
     public static void addData() {
 
         StudentService studentService = new StudentService();
         CourseService courseService = new CourseService();
         String instructorPhillip = "Phillip Witkin";
+        // had to make student id NonNull in order for this to work
         studentService.createStudent(new Student("reema@gmail.com", "reema brown", PASSWORD));
         studentService.createStudent(new Student("annette@gmail.com", "annette allen", PASSWORD));
         studentService.createStudent(new Student("anthony@gmail.com", "anthony gallegos", PASSWORD));

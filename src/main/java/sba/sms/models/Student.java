@@ -35,6 +35,7 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "student")
 public class Student {
 	@Id
+	@NonNull
 	@Column(name = "email", length = 50)
 	String email;
 	@NonNull
