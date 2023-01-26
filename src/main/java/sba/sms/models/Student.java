@@ -1,6 +1,7 @@
 package sba.sms.models;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.jar.Attributes.Name;
 
 import jakarta.persistence.CascadeType;
@@ -53,9 +54,29 @@ public class Student {
 					referencedColumnName = "id"
 			)
 	)
-	@ManyToMany(targetEntity = Course.class, fetch = FetchType.EAGER,
+	@ManyToMany(fetch = FetchType.EAGER,
 	cascade = {CascadeType.DETACH, CascadeType.MERGE,
 	CascadeType.PERSIST, CascadeType.REFRESH})
 	List<Course> courses;
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(courses, email, name, password);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		return Objects.equals(courses, other.courses) && Objects.equals(email, other.email)
+				&& Objects.equals(name, other.name) && Objects.equals(password, other.password);
+	}
+	
+	
 	
 }
