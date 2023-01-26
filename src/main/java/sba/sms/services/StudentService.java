@@ -2,7 +2,11 @@ package sba.sms.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import javax.management.RuntimeErrorException;
+
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -26,14 +30,14 @@ public class StudentService implements StudentI {
 			Query<Student> query = session.createQuery(q, Student.class);
 			result = query.getResultList();
 			tx.commit();
-
+			return result;
 		} catch (HibernateException ex) {
 
 			ex.printStackTrace();
 			tx.rollback();
 
 		} finally {
-			HibernateUtil.shutdown();
+			session.close();
 		}
 		
 		return result;
@@ -46,7 +50,7 @@ public class StudentService implements StudentI {
 
 		try {
 			tx = session.beginTransaction();
-			session.merge(student);
+			session.persist(student);
 			tx.commit();
 		} catch (HibernateException ex) {
 
@@ -54,7 +58,7 @@ public class StudentService implements StudentI {
 			tx.rollback();
 
 		} finally {
-			HibernateUtil.shutdown();
+			session.close();
 		}
 	}
 
@@ -68,15 +72,24 @@ public class StudentService implements StudentI {
 		try {
 			tx = session.beginTransaction();
 			result = session.get(Student.class, email);
+			// might not need
+			System.out.println(result);
+			if (result == null) {
+				throw new NoSuchElementException("No such email exists in the system");
+			}
 			tx.commit();
-
+			// might not need
 		} catch (HibernateException ex) {
 
 			ex.printStackTrace();
 			tx.rollback();
+			// might not need
+		} catch (NoSuchElementException ex) {
+			System.out.println(ex.getMessage());
+			tx.rollback();
 
 		} finally {
-			HibernateUtil.shutdown();
+			session.close();
 		}
 		
 		return result;
@@ -102,8 +115,13 @@ public class StudentService implements StudentI {
 			ex.printStackTrace();
 			tx.rollback();
 
+		} catch (NullPointerException ex) {
+			System.out.println("Wrong Credentials");
+			tx.rollback();
+
 		} finally {
-			HibernateUtil.shutdown();
+			//HibernateUtil.shutdown();
+			session.close();
 		}
     	return result;
     }
@@ -121,11 +139,15 @@ public class StudentService implements StudentI {
 			List<Course> courses = student.getCourses();
 			for (Course c : courses) {
 				if (c.getId() == courseId) {
-					System.out.println("Student is already enrolled in class");
-					break;
+					// might change
+					throw new RuntimeException("Student already registered to course with ID " + courseId);
 				}
 			}
+			// might change
 			course = session.get(Course.class, courseId);
+			if (course == null) {
+				throw new NoSuchElementException("Course does not exist");
+			}
 			courses.add(course);
 			student.setCourses(courses);
 			session.merge(student);
@@ -134,9 +156,18 @@ public class StudentService implements StudentI {
 
 			ex.printStackTrace();
 			tx.rollback();
+		// might change
+		} catch (NoSuchElementException ex) {
+			System.out.println(ex.getMessage());
+			tx.rollback();
+
+		} catch (RuntimeException ex) {
+			System.out.println(ex.getMessage());
+			tx.rollback();
 
 		} finally {
-			HibernateUtil.shutdown();
+			//HibernateUtil.shutdown();
+			session.close();
 		}
     }
 
@@ -159,7 +190,8 @@ public class StudentService implements StudentI {
 			tx.rollback();
 
 		} finally {
-			HibernateUtil.shutdown();
+			//HibernateUtil.shutdown();
+			session.close();
 		}
     	
     	return result;

@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -44,7 +45,7 @@ public class Student {
 	@NonNull
 	@Column(name = "password", length = 50)
 	String password;
-	@ToString.Exclude
+	
 	@JoinTable(name = "student_courses",
 			joinColumns = @JoinColumn(
 					name = "student_email",
@@ -55,9 +56,10 @@ public class Student {
 					referencedColumnName = "id"
 			)
 	)
-	@ManyToMany(fetch = FetchType.EAGER,
+	@OneToMany(fetch = FetchType.EAGER,
 	cascade = {CascadeType.DETACH, CascadeType.MERGE,
 	CascadeType.PERSIST, CascadeType.REFRESH})
+	@ToString.Exclude
 	List<Course> courses;
 	
 	@Override
