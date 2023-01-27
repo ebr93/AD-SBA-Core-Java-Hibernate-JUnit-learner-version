@@ -73,6 +73,8 @@ public class CourseService implements CourseI {
 			String q = "from Course";
 			Query<Course> query = session.createQuery(q, Course.class);
 			result = query.getResultList();
+			//System.out.println(result);
+			//System.out.println(result.size());
 			tx.commit();
 		} catch (HibernateException ex) {
 

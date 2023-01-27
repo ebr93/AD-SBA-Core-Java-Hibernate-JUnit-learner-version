@@ -62,4 +62,15 @@ class StudentServiceTest {
         assertThat(courseService.getAllCourses()).hasSameElementsAs(expected);
 
     }
+    
+    /*
+    @Test
+    void getStudentByEmail() {
+
+        Student expected = new Student("annette@gmail.com", "annette allen", "password");
+
+        assertThat(studentService.getStudentByEmail("annette@gmail.com")).returns(expected, null)
+
+    }
+    */
 }

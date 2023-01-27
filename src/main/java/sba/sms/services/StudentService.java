@@ -13,6 +13,7 @@ import org.hibernate.Transaction;
 import org.hibernate.internal.build.AllowSysOut;
 import org.hibernate.query.Query;
 
+import jakarta.persistence.TypedQuery;
 import sba.sms.dao.StudentI;
 import sba.sms.models.Course;
 import sba.sms.models.Student;
@@ -29,12 +30,12 @@ public class StudentService implements StudentI {
 			tx = session.beginTransaction();
 			String q = "from Student s";
 			Query<Student> query = session.createQuery(q, Student.class);
-			result = query.getResultList();
+			result.addAll(query.getResultList());
 			
 			// System.out.println(result);
 			
 			tx.commit();
-			return result;
+
 		} catch (HibernateException ex) {
 
 			ex.printStackTrace();
@@ -192,13 +193,13 @@ public class StudentService implements StudentI {
 		try {
 			tx = session.beginTransaction();
 			String q = "select * from student s where email = :email";
-			Query query = session.createNativeQuery(q, Student.class);
+			TypedQuery<Student> query = session.createNativeQuery(q, Student.class);
 					query.setParameter("email", email);
 			List<Student> students = query.getResultList();
 			Student student = students.get(0);
-			result = student.getCourses();
-			// System.out.println("getStudentCourses print student: " + student);
-			// System.out.println("courses size: " + result.size());
+			//result = student.getCourses();
+			result.addAll(student.getCourses());
+			//System.out.println("Courses enrolled in: " + result.size());
 			tx.commit();
 		} catch (HibernateException ex) {
 			ex.printStackTrace();
