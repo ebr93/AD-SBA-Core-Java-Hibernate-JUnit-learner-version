@@ -30,6 +30,9 @@ public class StudentService implements StudentI {
 			String q = "from Student s";
 			Query<Student> query = session.createQuery(q, Student.class);
 			result = query.getResultList();
+			
+			System.out.println(result);
+			
 			tx.commit();
 			return result;
 		} catch (HibernateException ex) {

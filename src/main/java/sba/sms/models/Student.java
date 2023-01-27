@@ -61,12 +61,12 @@ public class Student {
 	CascadeType.PERSIST, CascadeType.REFRESH})
 	@ToString.Exclude
 	List<Course> courses;
-	
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(courses, email, name, password);
+		return Objects.hash(email, name, password);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -76,9 +76,11 @@ public class Student {
 		if (getClass() != obj.getClass())
 			return false;
 		Student other = (Student) obj;
-		return Objects.equals(courses, other.courses) && Objects.equals(email, other.email)
-				&& Objects.equals(name, other.name) && Objects.equals(password, other.password);
+		return Objects.equals(email, other.email) && Objects.equals(name, other.name)
+				&& Objects.equals(password, other.password);
 	}
+	
+
 	
 	
 	
