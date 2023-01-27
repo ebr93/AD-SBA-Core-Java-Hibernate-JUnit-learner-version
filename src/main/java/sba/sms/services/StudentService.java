@@ -31,7 +31,7 @@ public class StudentService implements StudentI {
 			Query<Student> query = session.createQuery(q, Student.class);
 			result = query.getResultList();
 			
-			System.out.println(result);
+			// System.out.println(result);
 			
 			tx.commit();
 			return result;
