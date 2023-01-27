@@ -56,7 +56,7 @@ public class Student {
 					referencedColumnName = "id"
 			)
 	)
-	@OneToMany(fetch = FetchType.EAGER,
+	@ManyToMany(targetEntity = Course.class, fetch = FetchType.EAGER,
 	cascade = {CascadeType.DETACH, CascadeType.MERGE,
 	CascadeType.PERSIST, CascadeType.REFRESH})
 	@ToString.Exclude

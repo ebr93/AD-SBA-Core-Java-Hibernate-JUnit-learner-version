@@ -10,6 +10,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.internal.build.AllowSysOut;
 import org.hibernate.query.Query;
 
 import sba.sms.dao.StudentI;
@@ -128,14 +129,17 @@ public class StudentService implements StudentI {
 
     @Override
     public void registerStudentToCourse(String email, int courseId) {
-    	Student student = new Student();
-    	Course course = new Course();
 		Transaction tx = null;
 		Session session = HibernateUtil.getSessionFactory().openSession();
 
 		try {
 			tx = session.beginTransaction();
-			student = session.get(Student.class, email);
+	    	Student student = session.get(Student.class, email);
+	    	Course course = session.get(Course.class, courseId);
+			// student = session.get(Student.class, email);
+			
+			//System.out.println(student);
+			
 			List<Course> courses = student.getCourses();
 			for (Course c : courses) {
 				if (c.getId() == courseId) {
@@ -144,7 +148,11 @@ public class StudentService implements StudentI {
 				}
 			}
 			// might change
-			course = session.get(Course.class, courseId);
+			// course = session.get(Course.class, courseId);
+			
+			//System.out.println(course);
+			//System.out.println("courses size: " + courses.size());
+			
 			if (course == null) {
 				throw new NoSuchElementException("Course does not exist");
 			}
@@ -180,12 +188,23 @@ public class StudentService implements StudentI {
 
 		try {
 			tx = session.beginTransaction();
-			String q = "select s.courses from student s where email = :email";
+			// :email
+			String q = "select * from student s where email = :email";
 			Query query = session.createNativeQuery(q, Student.class);
-			result = query.setParameter("email", email).getResultList();
+					query.setParameter("email", email);
+			List<Student> students = query.getResultList();
+			Student student = students.get(0);
+			result = student.getCourses();
+			System.out.println("getStudentCourses print student: " + student);
+			System.out.println("courses size: " + result.size());
 			tx.commit();
 		} catch (HibernateException ex) {
+			System.out.println("Hibernate exception is the problem*******");
+			ex.printStackTrace();
+			tx.rollback();
 
+		} catch (NullPointerException ex) {
+			System.out.println("NullPointer exception is the problem ******");
 			ex.printStackTrace();
 			tx.rollback();
 

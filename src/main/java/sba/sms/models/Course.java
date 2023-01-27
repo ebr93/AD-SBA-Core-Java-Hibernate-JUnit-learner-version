@@ -40,7 +40,7 @@ public class Course {
 	@Column(length = 50)
 	String instructor;
 	@ToString.Exclude
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "courses")
+	@ManyToMany(targetEntity = Student.class, fetch = FetchType.EAGER, mappedBy = "courses")
 	List<Student> students;
 	
 	@Override
