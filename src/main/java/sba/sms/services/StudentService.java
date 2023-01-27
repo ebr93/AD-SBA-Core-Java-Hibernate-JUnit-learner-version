@@ -74,7 +74,7 @@ public class StudentService implements StudentI {
 			tx = session.beginTransaction();
 			result = session.get(Student.class, email);
 			// might not need
-			System.out.println(result);
+			// System.out.println(result);
 			if (result == null) {
 				throw new NoSuchElementException("No such email exists in the system");
 			}
@@ -188,23 +188,21 @@ public class StudentService implements StudentI {
 
 		try {
 			tx = session.beginTransaction();
-			// :email
 			String q = "select * from student s where email = :email";
 			Query query = session.createNativeQuery(q, Student.class);
 					query.setParameter("email", email);
 			List<Student> students = query.getResultList();
 			Student student = students.get(0);
 			result = student.getCourses();
-			System.out.println("getStudentCourses print student: " + student);
-			System.out.println("courses size: " + result.size());
+			// System.out.println("getStudentCourses print student: " + student);
+			// System.out.println("courses size: " + result.size());
 			tx.commit();
 		} catch (HibernateException ex) {
-			System.out.println("Hibernate exception is the problem*******");
 			ex.printStackTrace();
 			tx.rollback();
 
 		} catch (NullPointerException ex) {
-			System.out.println("NullPointer exception is the problem ******");
+			System.out.println("Value is null");
 			ex.printStackTrace();
 			tx.rollback();
 
