@@ -45,7 +45,7 @@ public class Course {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(instructor, name, students);
+		return Objects.hash(id, instructor, name);
 	}
 	
 	@Override
@@ -57,9 +57,9 @@ public class Course {
 		if (getClass() != obj.getClass())
 			return false;
 		Course other = (Course) obj;
-		return Objects.equals(instructor, other.instructor) && Objects.equals(name, other.name)
-				&& Objects.equals(students, other.students);
+		return id == other.id && Objects.equals(instructor, other.instructor) && Objects.equals(name, other.name);
 	}
 	
+
 	
 }
